@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Physics Playground</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      padding: 10px;
+      overflow: hidden;
+    }
+    
+    .container {
+      display: flex;
+      height: calc(100vh - 20px);
+      max-width: 100%;
+      margin: 0 auto;
+      gap: 10px;
+    }
+    
+    .canvas-container {
+      flex: 1;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .canvas-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .canvas-title {
+      font-weight: bold;
+      color: #4a6baf;
+      font-size: 1.5rem;
+    }
+    
+    #physics-canvas {
+      background-color: white;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      width: 100%;
+      height: calc(100% - 50px);
+    }
+    
+    .controls-panel {
+      width: 300px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+    }
+    
+    .control-section {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    
+    .section-title {
+      font-weight: bold;
+      color: #4a6baf;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    
+    .control-group {
+      margin-bottom: 12px;
+    }
+    
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+    
+    .control-value {
+      font-weight: bold;
+      color: #4a6baf;
+    }
+    
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #ddd;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #4a6baf;
+      cursor: pointer;
+    }
+    
+    .button-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    
+    button {
+      padding: 8px 12px;
+      background-color: #4a6baf;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background-color: #3a5a9f;
+    }
+    
+    .shape-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    
+    .shape-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #e9ecf3;
+      color: #4a6baf;
+      border: 1px solid #d0d7e6;
+      padding: 8px;
+    }
+    
+    .shape-icon {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+    }
+    
+    .preset-button {
+      background-color: #e9ecf3;
+      color: #4a6baf;
+      border: 1px solid #d0d7e6;
+    }
+    
+    .action-button {
+      font-weight: bold;
+    }
+    
+    .info-panel {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e9ecf3;
+      border-radius: 5px;
+      font-size: 0.9rem;
+    }
+    
+    .info-title {
+      font-weight: bold;
+      color: #4a6baf;
+      margin-bottom: 5px;
+    }
+    
+    .info-content {
+      color: #666;
+      line-height: 1.4;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+      }
+      
+      .controls-panel {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="canvas-container">
+      <div class="canvas-header">
+        <div class="canvas-title">Physics Playground</div>
+        <button id="reset-button" class="action-button">Reset World</button>
+      </div>
+      <canvas id="physics-canvas"></canvas>
+    </div>
+    
+    <div class="controls-panel">
+      <div class="control-section">
+        <div class="section-title">Add Objects</div>
+        <div class="shape-buttons">
+          <button class="shape-button" id="add-circle">
+            <div class="shape-icon">⚪</div>
+            <span>Circle</span>
+          </button>
+          <button class="shape-button" id="add-square">
+            <div class="shape-icon">⬛</div>
+            <span>Square</span>
+          </button>
+          <button class="shape-button" id="add-triangle">
+            <div class="shape-icon">▲</div>
+            <span>Triangle</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="control-section">
+        <div class="section-title">Physics Controls</div>
+        
+        <div class="control-group">
+          <div class="control-label">
+            <span>Gravity</span>
+            <span class="control-value" id="gravity-value">1.0</span>
+          </div>
+          <input id="gravity" type="range" min="-1" max="1" step="0.1" value="1" />
+        </div>
+        
+        <div class="control-group">
+          <div class="control-label">
+            <span>Bounciness</span>
+            <span class="control-value" id="restitution-value">0.8</span>
+          </div>
+          <input id="restitution" type="range" min="0" max="1" step="0.1" value="0.8" />
+        </div>
+        
+        <div class="control-group">
+          <div class="control-label">
+            <span>Friction</span>
+            <span class="control-value" id="friction-value">0.1</span>
+          </div>
+          <input id="friction" type="range" min="0" max="1" step="0.1" value="0.1" />
+        </div>
+        
+        <div class="control-group">
+          <div class="control-label">
+            <span>Air Resistance</span>
+            <span class="control-value" id="air-value">0.01</span>
+          </div>
+          <input id="air-friction" type="range" min="0" max="0.1" step="0.01" value="0.01" />
+        </div>
+      </div>
+      
+      <div class="control-section">
+        <div class="section-title">Special Actions</div>
+        <div class="button-container">
+          <button id="explosion-button" class="action-button">Explosion! 💥</button>
+          <button id="antigravity-button" class="action-button">Zero-G 🚀</button>
+          <button id="add-platform" class="action-button">Add Platform</button>
+          <button id="add-pendulum" class="action-button">Add Pendulum</button>
+        </div>
+      </div>
+      
+      <div class="control-section">
+        <div class="section-title">Preset Scenes</div>
+        <div class="button-container">
+          <button id="preset-domino" class="preset-button">Domino Run</button>
+          <button id="preset-newton" class="preset-button">Newton's Cradle</button>
+          <button id="preset-catapult" class="preset-button">Catapult</button>
+          <button id="preset-playground" class="preset-button">Playground</button>
+        </div>
+      </div>
+      
+      <div class="info-panel">
+        <div class="info-title">How to Play</div>
+        <div class="info-content">
+          • Click and drag to move objects<br>
+          • Use the sliders to change physics properties<br>
+          • Add new shapes with the buttons above<br>
+          • Try the special actions for fun effects!<br>
+          • Click "Reset World" to start over
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.18.0/build/matter.min.js"></script>
+  <script src="physics.js"></script>
+</body>
+</html>

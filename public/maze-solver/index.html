@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maze Solver</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      padding: 10px;
+      overflow: hidden;
+    }
+    
+    .container {
+      display: flex;
+      height: calc(100vh - 20px);
+      max-width: 100%;
+      margin: 0 auto;
+      gap: 10px;
+    }
+    
+    .canvas-container {
+      flex: 1;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .canvas-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .canvas-title {
+      font-weight: bold;
+      color: #4a6baf;
+      font-size: 1.5rem;
+    }
+    
+    #maze-canvas {
+      background-color: white;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      width: 100%;
+      height: calc(100% - 50px);
+    }
+    
+    .controls-panel {
+      width: 300px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+    }
+    
+    .control-section {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    
+    .section-title {
+      font-weight: bold;
+      color: #4a6baf;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    
+    .control-group {
+      margin-bottom: 12px;
+    }
+    
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+    
+    .control-value {
+      font-weight: bold;
+      color: #4a6baf;
+    }
+    
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #ddd;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #4a6baf;
+      cursor: pointer;
+    }
+    
+    .button-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    
+    button {
+      padding: 8px 12px;
+      background-color: #4a6baf;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background-color: #3a5a9f;
+    }
+    
+    .algorithm-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    
+    .algorithm-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #e9ecf3;
+      color: #4a6baf;
+      border: 1px solid #d0d7e6;
+      padding: 8px;
+    }
+    
+    .algorithm-button.active {
+      background-color: #4a6baf;
+      color: white;
+    }
+    
+    .maze-button {
+      background-color: #e9ecf3;
+      color: #4a6baf;
+      border: 1px solid #d0d7e6;
+    }
+    
+    .action-button {
+      font-weight: bold;
+    }
+    
+    .info-panel {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e9ecf3;
+      border-radius: 5px;
+      font-size: 0.9rem;
+    }
+    
+    .info-title {
+      font-weight: bold;
+      color: #4a6baf;
+      margin-bottom: 5px;
+    }
+    
+    .info-content {
+      color: #666;
+      line-height: 1.4;
+    }
+    
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8rem;
+    }
+    
+    .legend-color {
+      width: 15px;
+      height: 15px;
+      border-radius: 3px;
+    }
+    
+    .speed-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .speed-slider {
+      flex: 1;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+      }
+      
+      .controls-panel {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="canvas-container">
+      <div class="canvas-header">
+        <div class="canvas-title">Maze Solver</div>
+        <button id="reset-button" class="action-button">Reset</button>
+      </div>
+      <canvas id="maze-canvas"></canvas>
+    </div>
+    
+    <div class="controls-panel">
+      <div class="control-section">
+        <div class="section-title">Maze Controls</div>
+        <div class="button-container">
+          <button id="generate-maze" class="action-button">Generate Maze</button>
+          <button id="clear-maze" class="action-button">Clear Maze</button>
+        </div>
+        
+        <div class="control-group">
+          <div class="control-label">
+            <span>Maze Size</span>
+            <span class="control-value" id="size-value">15 x 15</span>
+          </div>
+          <input id="maze-size" type="range" min="5" max="25" value="15" />
+        </div>
+        
+        <div class="control-group">
+          <div class="control-label">
+            <span>Wall Density</span>
+            <span class="control-value" id="density-value">30%</span>
+          </div>
+          <input id="wall-density" type="range" min="10" max="50" step="5" value="30" />
+        </div>
+      </div>
+      
+      <div class="control-section">
+        <div class="section-title">Pathfinding Algorithms</div>
+        <div class="algorithm-buttons">
+          <button class="algorithm-button active" id="algorithm-astar">
+            <span>A* Search</span>
+          </button>
+          <button class="algorithm-button" id="algorithm-dijkstra">
+            <span>Dijkstra</span>
+          </button>
+          <button class="algorithm-button" id="algorithm-bfs">
+            <span>Breadth-First</span>
+          </button>
+          <button class="algorithm-button" id="algorithm-dfs">
+            <span>Depth-First</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="control-section">
+        <div class="section-title">Visualization</div>
+        <button id="solve-btn" class="action-button">Solve Maze</button>
+        
+        <div class="control-group">
+          <div class="control-label">
+            <span>Animation Speed</span>
+          </div>
+          <div class="speed-control">
+            <span>Slow</span>
+            <input id="speed-slider" class="speed-slider" type="range" min="1" max="100" step="1" value="50" />
+            <span>Fast</span>
+          </div>
+        </div>
+        
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #4a6baf;"></div>
+            <span>Start</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #e74c3c;"></div>
+            <span>End</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #333;"></div>
+            <span>Wall</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #f1c40f;"></div>
+            <span>Visited</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #2ecc71;"></div>
+            <span>Path</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="info-panel">
+        <div class="info-title">How Pathfinding Works</div>
+        <div class="info-content">
+          <p><strong>A* Search:</strong> Combines Dijkstra's algorithm with a heuristic that estimates the distance to the goal.</p>
+          <p><strong>Dijkstra:</strong> Finds the shortest path by exploring nodes with the lowest distance from the start.</p>
+          <p><strong>Breadth-First:</strong> Explores all neighbors at the current depth before moving deeper.</p>
+          <p><strong>Depth-First:</strong> Explores as far as possible along each branch before backtracking.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="maze-simple.js"></script>
+</body>
+</html>

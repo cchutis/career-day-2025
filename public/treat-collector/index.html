@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treat Collector</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #7cba5d;
+      display: flex;
+      font-family: Arial, sans-serif;
+    }
+    
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap');
+    
+    #leaderboard {
+      width: 250px;
+      background-color: #f8d56c; /* Warm yellow background */
+      color: #5b3a29; /* Brown text */
+      padding: 15px;
+      box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+      overflow-y: auto;
+      z-index: 100;
+      border-right: 6px solid #d9842b; /* Orange border */
+      font-family: 'Bubblegum Sans', cursive;
+    }
+    
+    #leaderboard h2 {
+      text-align: center;
+      margin-top: 0;
+      border-bottom: 3px dashed #d9842b; /* Dashed orange border */
+      padding-bottom: 10px;
+      color: #d9842b; /* Orange title */
+      font-size: 28px;
+      text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+      letter-spacing: 1px;
+    }
+    
+    #leaderboard-entries {
+      padding: 10px 5px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 10px;
+      margin-top: 10px;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+    }
+    
+    .leaderboard-entry {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 10px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      background-color: white;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+      font-size: 16px;
+    }
+    
+    .leaderboard-entry:hover {
+      transform: scale(1.03);
+      background-color: #fff8e1;
+    }
+    
+    .leaderboard-entry:nth-child(1) {
+      background-color: #ffd700; 
+      font-weight: bold;
+    }
+    
+    .leaderboard-entry:nth-child(2) {
+      background-color: #e6e6e6; 
+    }
+    
+    .leaderboard-entry:nth-child(3) {
+      background-color: #cd7f32; /* Bronze for 3rd place */
+      color: #ffffff;
+      text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+      font-weight: bold;
+    }
+    
+    /* Make sure the score is also visible on bronze background */
+    .leaderboard-entry:nth-child(3) span:last-child {
+      color: #ffffff;
+      text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    }
+    
+    .leaderboard-entry span:first-child {
+      display: flex;
+      align-items: center;
+    }
+    
+    .leaderboard-entry span:last-child {
+      font-weight: bold;
+      color: #d9842b;
+    }
+    
+    #game-container {
+      flex: 1;
+      position: relative;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    #name-input-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #f8d56c;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      z-index: 1000;
+      display: none;
+      border: 8px solid #d9842b;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 90%;
+      width: 400px;
+      font-family: 'Bubblegum Sans', cursive;
+    }
+    
+    #name-input-container::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 40px;
+      background-image: url('assets/sprites/treat.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    #name-input-container h3 {
+      color: #5b3a29;
+      margin-top: 0;
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 0 #fff;
+    }
+    
+    #player-name {
+      padding: 12px 15px;
+      font-size: 18px;
+      width: 80%;
+      margin-bottom: 20px;
+      border: 3px solid #d9842b;
+      border-radius: 10px;
+      font-family: 'Bubblegum Sans', cursive;
+      color: #5b3a29;
+      background-color: #fff8e1;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    #player-name:focus {
+      outline: none;
+      border-color: #7cba5d;
+      box-shadow: 0 0 8px rgba(124, 186, 93, 0.6);
+    }
+    
+    #submit-name {
+      padding: 15px 30px;
+      background-color: #7cba5d;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 22px;
+      cursor: pointer;
+      font-family: 'Bubblegum Sans', cursive;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 5px 0 #5a9840, 0 5px 10px rgba(0,0,0,0.2);
+      transition: all 0.2s ease;
+      position: relative;
+      animation: pulse 2s infinite;
+    }
+    
+    #submit-name:hover {
+      background-color: #8cd46d;
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 #5a9840, 0 7px 15px rgba(0,0,0,0.3);
+    }
+    
+    #submit-name:active {
+      background-color: #6baa4c;
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #5a9840, 0 2px 5px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <div id="leaderboard">
+    <h2>Top Treat Collectors</h2>
+    <div id="leaderboard-entries"></div>
+    <div id="leaderboard-trophy" style="text-align: center; margin-top: 20px;">
+      <img src="assets/sprites/treat.png" alt="Treat" style="width: 40px; height: 40px; margin: 10px; animation: bounce 1s infinite alternate;">
+    </div>
+  </div>
+  
+  <div id="game-container">
+    <div id="name-input-container">
+      <h3>Enter Your Name</h3>
+      <input type="text" id="player-name" placeholder="Your Name" maxlength="15">
+      <button id="submit-name">Start Game</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.min.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

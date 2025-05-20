@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Turtle Graphics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      padding: 10px;
+      overflow: hidden;
+    }
+    
+    .container {
+      display: flex;
+      height: calc(100vh - 20px);
+      max-width: 100%;
+      margin: 0 auto;
+      gap: 10px;
+    }
+    
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      width: 35%;
+      gap: 10px;
+    }
+    
+    .canvas-container {
+      flex: 1;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .canvas-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .canvas-title {
+      font-weight: bold;
+      color: #4a6baf;
+    }
+    
+    #turtle-canvas {
+      background-color: white;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      width: 100%;
+      height: calc(100% - 50px);
+    }
+    
+    .middle-panel {
+      display: flex;
+      flex-direction: column;
+      width: 35%;
+      gap: 10px;
+    }
+    
+    .code-container {
+      flex: 1;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    
+    .code-title {
+      font-weight: bold;
+      color: #4a6baf;
+    }
+    
+    #code-editor {
+      width: 100%;
+      height: 50%;
+      font-family: monospace;
+      font-size: 14px;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      resize: none;
+    }
+    
+    .log-container {
+      width: 100%;
+      height: 60px;
+      font-family: monospace;
+      font-size: 12px;
+      background: #f5f5f5;
+      padding: 5px;
+      border-radius: 5px;
+      margin-top: 5px;
+      overflow-y: auto;
+    }
+    
+    .button-container {
+      display: flex;
+      gap: 5px;
+      margin-top: 5px;
+    }
+    
+    button {
+      padding: 5px 10px;
+      background-color: #4a6baf;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-weight: bold;
+      font-size: 12px;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background-color: #3a5a9f;
+    }
+    
+    .examples-container {
+      margin-top: 5px;
+    }
+    
+    .examples-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #4a6baf;
+      font-size: 14px;
+    }
+    
+    .example-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    
+    .example-button {
+      background-color: #e9ecf3;
+      color: #4a6baf;
+      border: 1px solid #d0d7e6;
+      font-size: 12px;
+    }
+    
+    .example-button:hover {
+      background-color: #d0d7e6;
+    }
+    
+    .controls-container {
+      margin-top: 5px;
+    }
+    
+    .controls-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #4a6baf;
+      font-size: 14px;
+    }
+    
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+    }
+    
+    .control-button {
+      background-color: #e9ecf3;
+      color: #4a6baf;
+      border: 1px solid #d0d7e6;
+      font-size: 12px;
+      padding: 3px 5px;
+    }
+    
+    .control-button:hover {
+      background-color: #d0d7e6;
+    }
+    
+    .right-panel {
+      width: 30%;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      overflow-y: auto;
+    }
+    
+    .commands-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #4a6baf;
+    }
+    
+    .commands-list {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 5px;
+    }
+    
+    .command-item {
+      background: #f9f9f9;
+      padding: 5px;
+      border-radius: 5px;
+      border-left: 3px solid #4a6baf;
+    }
+    
+    .command-name {
+      font-weight: bold;
+      color: #4a6baf;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    
+    .command-desc {
+      font-size: 12px;
+      color: #666;
+      margin-top: 2px;
+    }
+    
+    @media (max-width: 1200px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+      }
+      
+      .left-panel, .middle-panel, .right-panel {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <div class="canvas-container">
+        <div class="canvas-header">
+          <div class="canvas-title">Turtle Graphics</div>
+          <div>
+            <button id="clear-button">Clear Canvas</button>
+            <button id="reset-button">Reset Turtle</button>
+          </div>
+        </div>
+        <canvas id="turtle-canvas" width="600" height="400"></canvas>
+      </div>
+    </div>
+    
+    <div class="middle-panel">
+      <div class="code-container">
+        <div class="code-header">
+          <div class="code-title">Code Editor</div>
+          <div>
+            <button id="clear-code-button">Clear Code</button>
+            <button id="run-button">Run Code</button>
+          </div>
+        </div>
+        <textarea id="code-editor">// Try writing turtle commands here!
+// Example: forward(100);
+</textarea>
+        <div id="log-container" class="log-container"></div>
+        <div class="button-container">
+          <button id="step-button">Step Through</button>
+          <button id="clear-log-button">Clear Log</button>
+        </div>
+        
+        <div class="examples-container">
+          <div class="examples-title">Examples:</div>
+          <div class="example-buttons">
+            <button class="example-button" data-example="square">Square</button>
+            <button class="example-button" data-example="star">Star</button>
+            <button class="example-button" data-example="spiral">Spiral</button>
+            <button class="example-button" data-example="flower">Flower</button>
+            <button class="example-button" data-example="name">Write Name</button>
+          </div>
+        </div>
+        
+        <div class="controls-container">
+          <div class="controls-title">Quick Controls:</div>
+          <div class="controls-grid">
+            <button class="control-button" data-command="forward(50);">Forward</button>
+            <button class="control-button" data-command="backward(50);">Backward</button>
+            <button class="control-button" data-command="turnLeft(90);">Turn Left</button>
+            <button class="control-button" data-command="turnRight(90);">Turn Right</button>
+            <button class="control-button" data-command="penUp();">Pen Up</button>
+            <button class="control-button" data-command="penDown();">Pen Down</button>
+            <button class="control-button" data-command="setColor('red');">Red Pen</button>
+            <button class="control-button" data-command="setColor('blue');">Blue Pen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="right-panel">
+      <div class="commands-title">Turtle Commands:</div>
+      <div class="commands-list">
+        <div class="command-item">
+          <div class="command-name">forward(steps)</div>
+          <div class="command-desc">Move turtle forward</div>
+        </div>
+        <div class="command-item">
+          <div class="command-name">backward(steps)</div>
+          <div class="command-desc">Move turtle backward</div>
+        </div>
+        <div class="command-item">
+          <div class="command-name">turnLeft(degrees)</div>
+          <div class="command-desc">Turn turtle left</div>
+        </div>
+        <div class="command-item">
+          <div class="command-name">turnRight(degrees)</div>
+          <div class="command-desc">Turn turtle right</div>
+        </div>
+        <div class="command-item">
+          <div class="command-name">penUp()</div>
+          <div class="command-desc">Stop drawing</div>
+        </div>
+        <div class="command-item">
+          <div class="command-name">penDown()</div>
+          <div class="command-desc">Start drawing</div>
+        </div>
+        <div class="command-item">
+          <div class="command-name">setColor(color)</div>
+          <div class="command-desc">Change pen color</div>
+        </div>
+        <div class="command-item">
+          <div class="command-name">setWidth(width)</div>
+          <div class="command-desc">Change pen width</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="turtle.js"></script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Awesome Portfolio</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- Interactive Website Demo Panel -->
+    <div class="code-panel">
+      <div class="code-header">
+        <h3>Change My Website!</h3>
+        <p>Edit the code below to see how websites work!</p>
+      </div>
+      
+      <div class="code-editor">
+        <div class="code-section">
+          <h4>Colors</h4>
+          <div class="code-input">
+            <label>Background Color:</label>
+            <input type="color" id="bg-color" value="#f0f8ff">
+          </div>
+          <div class="code-input">
+            <label>Text Color:</label>
+            <input type="color" id="text-color" value="#333333">
+          </div>
+          <div class="code-input">
+            <label>Accent Color:</label>
+            <input type="color" id="accent-color" value="#4a6bdf">
+          </div>
+        </div>
+        
+        <div class="code-section">
+          <h4>Content</h4>
+          <div class="code-input">
+            <label>Your Name:</label>
+            <input type="text" id="name-input" value="Awesome Coder">
+          </div>
+          <div class="code-input">
+            <label>Your Title:</label>
+            <input type="text" id="title-input" value="Future Software Engineer">
+          </div>
+          <div class="code-input">
+            <label>About Me:</label>
+            <textarea id="about-input">I love coding and building cool things with computers! I'm learning how to make websites and games.</textarea>
+          </div>
+        </div>
+        
+        <div class="code-section">
+          <h4>Layout</h4>
+          <div class="code-input">
+            <label>Font Size:</label>
+            <input type="range" id="font-size" min="12" max="24" value="16">
+            <span id="font-size-value">16px</span>
+          </div>
+          <div class="code-input">
+            <label>Border Radius:</label>
+            <input type="range" id="border-radius" min="0" max="50" value="10">
+            <span id="border-radius-value">10px</span>
+          </div>
+          <div class="code-input">
+            <label>Add Photo:</label>
+            <select id="avatar-select">
+              <option value="none">No Photo</option>
+              <option value="boy1">Boy 1</option>
+              <option value="boy2">Boy 2</option>
+              <option value="girl1">Girl 1</option>
+              <option value="girl2">Girl 2</option>
+              <option value="robot">Robot</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="code-footer">
+        <button id="reset-btn">Reset to Default</button>
+        <button id="random-btn">Random Design</button>
+      </div>
+    </div>
+    
+    <!-- Live Preview Panel -->
+    <div class="preview-panel">
+      <div class="preview-header">
+        <h3>Live Preview</h3>
+        <p>See your changes instantly!</p>
+      </div>
+      
+      <div class="portfolio-preview" id="preview">
+        <header class="portfolio-header">
+          <div id="avatar-container" class="avatar-container">
+            <!-- Avatar will be added by JavaScript -->
+          </div>
+          <div class="header-text">
+            <h1 id="preview-name">Awesome Coder</h1>
+            <h2 id="preview-title">Future Software Engineer</h2>
+          </div>
+        </header>
+        
+        <section class="portfolio-about">
+          <h3>About Me</h3>
+          <p id="preview-about">I love coding and building cool things with computers! I'm learning how to make websites and games.</p>
+        </section>
+        
+        <section class="portfolio-skills">
+          <h3>My Skills</h3>
+          <div class="skills-container">
+            <div class="skill-item">
+              <span class="skill-name">HTML</span>
+              <div class="skill-bar">
+                <div class="skill-progress" style="width: 70%;"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">CSS</span>
+              <div class="skill-bar">
+                <div class="skill-progress" style="width: 60%;"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">JavaScript</span>
+              <div class="skill-bar">
+                <div class="skill-progress" style="width: 40%;"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="portfolio-projects">
+          <h3>My Projects</h3>
+          <div class="projects-container">
+            <div class="project-card">
+              <div class="project-icon">🎮</div>
+              <h4>Cool Game</h4>
+              <p>A fun game I made</p>
+            </div>
+            <div class="project-card">
+              <div class="project-icon">🤖</div>
+              <h4>Robot Friend</h4>
+              <p>A friendly robot</p>
+            </div>
+            <div class="project-card">
+              <div class="project-icon">🌈</div>
+              <h4>Color App</h4>
+              <p>App that makes colors</p>
+            </div>
+          </div>
+        </section>
+        
+        <footer class="portfolio-footer">
+          <p>Made with ❤️ by a future coder!</p>
+        </footer>
+      </div>
+    </div>
+    
+    <!-- Source Code Display Panel -->
+    <div class="code-display">
+      <div class="code-display-header">
+        <h3>The Code Behind This Website:</h3>
+      </div>
+      <div class="code-tabs">
+        <button class="tab-btn active" data-tab="html">HTML</button>
+        <button class="tab-btn" data-tab="css">CSS</button>
+        <button class="tab-btn" data-tab="js">JavaScript</button>
+      </div>
+      <pre class="code-content active" id="html-code"><!-- HTML code will be displayed here --></pre>
+      <pre class="code-content" id="css-code">/* CSS code will be displayed here */</pre>
+      <pre class="code-content" id="js-code">// JavaScript code will be displayed here</pre>
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>

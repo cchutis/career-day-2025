@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cody the Coding Robot</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Meet Cody the Coding Robot!</h1>
+      <p>Ask me about coding, what software engineers do, or just chat with me!</p>
+    </div>
+    
+    <div class="chatbot-container">
+      <div class="robot-container">
+        <div class="robot">
+          <div class="robot-head">
+            <div class="eyes">
+              <div class="eye left"></div>
+              <div class="eye right"></div>
+            </div>
+            <div class="mouth"></div>
+          </div>
+          <div class="robot-body">
+            <div class="buttons">
+              <div class="button"></div>
+              <div class="button"></div>
+              <div class="button"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chat-area">
+        <div id="chat-window">
+          <!-- Messages will appear here -->
+        </div>
+        
+        <div class="input-area">
+          <input id="chat-input" placeholder="Type your message to Cody..." />
+          <button id="send-btn">Send</button>
+          <button id="mic-btn" title="Speak to Cody">🎤</button>
+        </div>
+        
+        <div class="suggestion-chips">
+          <button class="chip" data-message="What is coding?">What is coding?</button>
+          <button class="chip" data-message="Tell me a joke">Tell me a joke</button>
+          <button class="chip" data-message="What do software engineers do?">What do engineers do?</button>
+          <button class="chip" data-message="Let's play a game">Let's play a game</button>
+          <button class="chip" data-message="Cool coding facts">Cool coding facts</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>Created by software engineers to show what we can build with code!</p>
+      <label class="sound-toggle">
+        <input type="checkbox" id="sound-toggle" checked>
+        <span>Robot Sounds</span>
+      </label>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="chat.js"></script>
+</body>
+</html>
